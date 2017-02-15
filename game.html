@@ -55,6 +55,9 @@
   var pythonImage = $("<img src='python.png' height=45 width=45>");
   var viewport = $(".viewport");
   var curretCell = null;
+  var statGameButton = $('#start_game');
+  var cells = null;
+
   var render = function() {
     viewport.css('display', 'table');
     var html = "";
@@ -70,12 +73,12 @@
     curretCell.append(pythonImage);
   }
 
-  var statGameButton = $('#start_game');
+
   statGameButton.on('click', function (e) {
     render();
     statGameButton.attr('disabled', true);
     var randomNumber = getRandomArbitrary(2, 100);
-    var cells = $('.game-space');
+    cells = $('.game-space');
     $(cells[randomNumber - 1]).addClass('ruby');
   });
 
@@ -100,13 +103,12 @@
         break;
       default:
     }
-    var cells = $('.game-space');
-    var snakeMoveCell = $(cells[tmpNumber - 1]);
-    var rubyCell = $(cells[cellNumber - 1]);
-    snakeMoveCell.append(pythonImage);
-    if(snakeMoveCell.hasClass('ruby')) {
-      rubyCell.removeClass('ruby');
-      alert('you reach the ruby!'+ movesNumber);
+
+    curretCell = $(cells[tmpNumber - 1]);
+    curretCell.append(pythonImage);
+    if(curretCell.hasClass('ruby')) {
+      curretCell.removeClass('ruby');
+      alert('you reach the ruby!' + movesNumber);
     }
     if(!Number.isNaN(tmpNumber)) {
       cellNumber = tmpNumber;
