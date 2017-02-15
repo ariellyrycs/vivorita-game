@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Jquery is included here and available for use -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- some basic styles for game setup -->
+    <style>
+      .viewport {
+        height: 500px;
+        width: 500px;
+        border: 1px solid black;
+        margin-bottom: 10px;
+        display: none;
+      }
+      .row {
+        display: table-row;
+      }
+      .game-space {
+        border: 1px dotted gray;
+        width: 50px;
+        height: 50px;
+        display: table-cell;
+      }
+      .ruby {
+        background-image: url(ruby.png);
+        background-repeat: no-repeat;
+        background-size: 40px 25px;
+        background-position: 4px 14px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <button id="start_game">Start Game</button>
+    <div class="viewport"></div>
+    <div class="form">
+      <!-- File picker will only work with modern browsers! -->
+      <input type="file" />
+    </div>
+  </body>
+</html>
+
+<script>
+//Render function is provided to draw the game board
+(function () {
+  var getRandomArbitrary = function (max, min) {
+    return Math.floor(Math.random() * (max - min)) + min
+  }
+
+  var pythonInitialStateX = 0;
+  var pythonInitialStateY = 0;
+  var nuberOfRows = 10
+  var numberOfColumns = 10;
+  var cellNumber = (pythonInitialStateX + 1) * (pythonInitialStateY + 1);
+  var pythonImage = $("<img src='python.png' height=45 width=45>");
+  var viewport = $(".viewport");
+  var curretCell = null;
+  var render = function() {
+    viewport.css('display', 'table');
+    var html = "";
+    for(var i=0; i<numberOfColumns; i++) {
+      html += "<div class='row'>";
+      for(var j=0; j<nuberOfRows; j++) {
+        html += "<div class='game-space' id="+i+""+j+"></div>";
+      }
+      html += "</div>";
+    }
+    viewport.html(html);
+    curretCell = viewport.find("#00");
+    curretCell.append(pythonImage);
+  }
+
+  var statGameButton = $('#start_game');
+  statGameButton.on('click', function (e) {
+    render();
+    statGameButton.attr('disabled', true);
+    var randomNumber = getRandomArbitrary(2, 100);
+    var cells = $('.game-space');
+    $(cells[randomNumber - 1]).addClass('ruby');
+  });
+
+  var movesNumber = 0;
+  $(document).on('keyup', function (e) {
+    var tmpNumber;
+    movesNumber++;
+    switch(e.key) {
+      case 'ArrowUp':
+        var move = cellNumber - numberOfColumns;
+        tmpNumber = move;
+        break;
+      case 'ArrowDown':
+        tmpNumber = cellNumber + numberOfColumns;
+        break;
+      case 'ArrowLeft':
+        var move = cellNumber - 1;
+        tmpNumber = move;
+        break;
+      case 'ArrowRight':
+        tmpNumber = cellNumber + 1;
+        break;
+      default:
+    }
+    var cells = $('.game-space');
+    var snakeMoveCell = $(cells[tmpNumber - 1]);
+    var rubyCell = $(cells[cellNumber - 1]);
+    snakeMoveCell.append(pythonImage);
+    if(snakeMoveCell.hasClass('ruby')) {
+      rubyCell.removeClass('ruby');
+      alert('you reach the ruby!'+ movesNumber);
+    }
+    if(!Number.isNaN(tmpNumber)) {
+      cellNumber = tmpNumber;
+    }
+
+  });
+}())
+//Your code here. Good luck!
+</script>
